@@ -43,6 +43,10 @@ int main() {
     cout << "window: " << window << endl
          << "gl_context: " << gl_context << endl;
 
+    SDL_Delay(3000);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
 	return 0;
 
 }
