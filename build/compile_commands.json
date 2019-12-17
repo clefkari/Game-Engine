@@ -1,8 +1,0 @@
-[
-  {
-    "directory": "/home/miles/engine/build",
-    "command": "c++ -Isrc/25a6634@@engine.cpp.executable@exe -Isrc -I../src -I/usr/include/SDL2 -I/usr/include/libdrm -fdiagnostics-color=always -pipe -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wnon-virtual-dtor -Wextra -Wpedantic -std=c++14 -g -D_REENTRANT -MD -MQ 'src/25a6634@@engine.cpp.executable@exe/engine.cpp.o' -MF 'src/25a6634@@engine.cpp.executable@exe/engine.cpp.o.d' -o 'src/25a6634@@engine.cpp.executable@exe/engine.cpp.o' -c ../src/engine.cpp",
-    "file": "../src/engine.cpp",
-    "output": "src/25a6634@@engine.cpp.executable@exe/engine.cpp.o"
-  }
-]
