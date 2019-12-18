@@ -4,7 +4,4 @@ project('Game_Engine','cpp',
 										'b_coverage=false',
 										'cpp_std=c++14'])
 
-sdl2 = dependency('sdl2')
-glew_dep = dependency('glew')
-
 subdir('src')
