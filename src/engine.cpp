@@ -20,7 +20,6 @@ int main() {
     cout << "glewInit: " << (glewInit() == GLEW_OK ? "yes" : "no") << endl;
 
     while (!glfwWindowShouldClose(window)) {
-        
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);
         glfwPollEvents();
