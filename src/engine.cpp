@@ -14,7 +14,6 @@ int main() {
     window = glfwCreateWindow(500, 300, "My Test", NULL, NULL);
 
     cout << "window: " << window << endl;
-    cout << "context: " << glfwGetCurrentContext() << endl;
 
     glfwMakeContextCurrent(window);
 
