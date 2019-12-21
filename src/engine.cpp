@@ -14,12 +14,11 @@ int main() {
     window = glfwCreateWindow(500, 300, "My Test", NULL, NULL);
 
     cout << "window: " << window << endl;
-
     glfwMakeContextCurrent(window);
 
-    //glTexImage2D(GL_TEXTURE2D, 0, GL_RGBA8, 10, 10, 0, GL_RGBA, GL_UNSIGNED_BYTE, ptrToPixelBuf);
-
     cout << "glewInit: " << (glewInit() == GLEW_OK ? "yes" : "no") << endl;
+
+    cout << "OpenGL version: " << glGetString(GL_VERSION) << endl;
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
