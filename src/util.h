@@ -1,3 +1,8 @@
+/**
+ * This file contains some utilities to keep out of the main file while
+ * 
+ */
+
 #ifndef ENGINE_UTIL_H
 #define ENGINE_UTIL_H
 
@@ -23,17 +28,6 @@ string read_file(string filename) {
 /**
  * 
  */
-const string shader_type_str(GLenum type) {
-    switch (type) {
-        case GL_VERTEX_SHADER: return "GL_VERTEX_SHADER";
-        default:
-        case GL_FRAGMENT_SHADER: return "GL_FRAGMENT_SHADER";
-    }
-}
-
-/**
- * 
- */
 GLuint compile_shader_file(GLenum type, const string &filename) {
 
     // Create a new empty shader and save its id.
@@ -52,9 +46,8 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
     const GLint source_len[] = {(GLint) source.size()};
 
     if (!shader_id) {
-        string sh_type = shader_type_str(type);
-        fprintf(stderr, "error: unable to create shader with type %s\n",
-            sh_type.c_str());
+        fprintf(stderr, "error: unable to create shader for file %s\n",
+            filename.c_str());
         return 0;
     }
     
