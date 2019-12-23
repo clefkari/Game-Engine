@@ -8,7 +8,10 @@ int main() {
     // Initialize OpenGL, GLFW, GLEW, and create a window.
     GLFWwindow *window = init();
 
-    create_program("./src/vertex-shader.glsl", "./src/fragment-shader.glsl");
+    GLuint program_id = create_program("./src/vertex-shader.glsl",
+        "./src/fragment-shader.glsl");
+
+    if (!program_id) return 0;
 
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);

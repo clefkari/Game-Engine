@@ -55,7 +55,8 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
     glCompileShader(shader_id);
     glGetShaderiv(shader_id, GL_COMPILE_STATUS, &compile_status);
 
-    if (compile_status != GL_TRUE) {
+    // If there was an error, then print out useful info.
+    if (compile_status == GL_FALSE) {
         int log_len = 0;
         glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_len);
 
@@ -102,7 +103,8 @@ GLuint create_program(const string &vert_src_file, const string &frag_src_file) 
 
     glGetProgramiv(program_id, GL_LINK_STATUS, &link_status);
 
-    if (link_status != GL_TRUE) {
+    // If there was an error, then print out useful info.
+    if (link_status == GL_FALSE) {
         int log_len = 0;
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_len);
 
@@ -142,10 +144,16 @@ GLFWwindow *init() {
 
     glfwMakeContextCurrent(window);
 
-    if (glewInit() != GLEW_OK) {
-        fprintf(stderr, "error: glewInit failed.\n");
+    const GLenum glew_err = glewInit();
+
+    if (glew_err != GLEW_OK) {
+        fprintf(stderr, "error: glewInit failed: %s.\n",
+            glewGetErrorString(glew_err));
         return nullptr;
     }
+
+    //
+    fprintf(stderr, "initialized with version: %s\n", glGetString(GL_VERSION));
 
     return window;
 }
