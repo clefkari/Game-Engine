@@ -1,6 +1,7 @@
 /**
  * This file contains some utilities to keep out of the main file while
- * 
+ * learning opengl. Its not really that organized but it's a place where
+ * useful code can go so we can reuse it in the future.
  */
 
 #ifndef ENGINE_UTIL_H
@@ -11,20 +12,23 @@
 
 #include <string>
 #include <fstream>
-#include <sstream>
-#include <cstdio>
+#include <alloca.h>
 
 using namespace std;
 
+/**
+ * GLFW Error callback function. Simply prints to stderr.
+ */
 void glfw_error_func(int error, const char *description) {
     fprintf(stderr, "error: glfw: %d, %s\n", error, description);
 }
 
 /**
- *
- *
+ * Initialize opengl and glew, create and return a window object.
  */
 GLFWwindow *init() {
+
+    // Set the error callback before trying to init.
     glfwSetErrorCallback(glfw_error_func);
 
     if (!glfwInit()) {
@@ -44,8 +48,10 @@ GLFWwindow *init() {
         return nullptr;
     }
 
+    // Make the window context the current context.
     glfwMakeContextCurrent(window);
 
+    // Now that a GL context has been created, initialize glew.
     const GLenum glew_err = glewInit();
 
     if (glew_err != GLEW_OK) {
@@ -54,15 +60,18 @@ GLFWwindow *init() {
         return nullptr;
     }
 
-    //
-    fprintf(stderr, "version: %s\n", glGetString(GL_VERSION));
+    // Print out some helpful version information.
+    fprintf(stderr, "opengl: %s\nglsl: %s\nrenderer: %s\nvendor: %s\n",
+        glGetString(GL_VERSION),
+        glGetString(GL_SHADING_LANGUAGE_VERSION),
+        glGetString(GL_RENDERER),
+        glGetString(GL_VENDOR));
 
     return window;
 }
 
 /**
- *
- *
+ * Just read in a file as a string.
  */
 string read_file(string filename) {
     ifstream in(filename);
@@ -71,7 +80,6 @@ string read_file(string filename) {
 }
 
 /**
- *
  *
  */
 GLuint compile_shader_file(GLenum type, const string &filename) {
@@ -111,12 +119,11 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
             filename.c_str());
 
         if (log_len) {
-            char *log = new char[log_len];
+            GLchar *log = (GLchar *) alloca(log_len);
             glGetShaderInfoLog(shader_id, log_len, nullptr, log);
             fprintf(stderr, "%s", log);
-            delete[] log;
         } else {
-            fprintf(stderr, "no info log found.\n");
+            fprintf(stderr, "no info log found!\n");
         }
         
         // Delete the shader
@@ -127,8 +134,8 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
     return shader_id;
 }
 
+
 /**
- *
  *
  */
 GLuint create_program(const string &vert_src_file, const string &frag_src_file) {
@@ -138,21 +145,19 @@ GLuint create_program(const string &vert_src_file, const string &frag_src_file) 
     GLuint program_id = glCreateProgram();
 
 
+    // Compile vetex shader and attach if successful.
     vert_shader_id = compile_shader_file(GL_VERTEX_SHADER, vert_src_file);
+    if (vert_shader_id) glAttachShader(program_id, vert_shader_id);
 
-    if (vert_shader_id)
-        glAttachShader(program_id, vert_shader_id);
-
+    // Compile fragment shader and attach if successful.
     frag_shader_id = compile_shader_file(GL_FRAGMENT_SHADER, frag_src_file);
+    if (frag_shader_id) glAttachShader(program_id, frag_shader_id);
 
-    if (frag_shader_id)
-        glAttachShader(program_id, frag_shader_id);
-
+    // Link the program.
     glLinkProgram(program_id);
 
-    glGetProgramiv(program_id, GL_LINK_STATUS, &link_status);
-
     // If there was an error, then print out useful info.
+    glGetProgramiv(program_id, GL_LINK_STATUS, &link_status);
     if (link_status == GL_FALSE) {
         int log_len = 0;
         glGetProgramiv(program_id, GL_INFO_LOG_LENGTH, &log_len);
@@ -160,12 +165,11 @@ GLuint create_program(const string &vert_src_file, const string &frag_src_file) 
         fprintf(stderr, "error: cannot link program:\n");
 
         if (log_len) {
-            char *log = new char[log_len];
+            GLchar *log = (GLchar *) alloca(log_len*sizeof(GLchar));
             glGetProgramInfoLog(program_id, log_len, nullptr, log);
             fprintf(stderr, "%s\n", log);
-            delete[] log;
         } else { 
-            fprintf(stderr, "no info log found.\n");
+            fprintf(stderr, "no info log found!\n");
         }
 
         glDeleteProgram(program_id);

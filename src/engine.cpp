@@ -8,8 +8,8 @@ int main() {
     // Initialize OpenGL, GLFW, GLEW, and create a window.
     GLFWwindow *window = init();
 
+    // Specify the vertex and fragment shaders,
     GLuint program_id = create_program(
-        // Specify the vertex and fragment shaders,
         "./src/vertex-shader.glsl",
         "./src/fragment-shader.glsl");
 
