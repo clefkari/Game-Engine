@@ -17,17 +17,19 @@
 using namespace std;
 
 /**
- * 
+ *
+ *
  */
 GLFWwindow *init() {
+
     if (!glfwInit()) {
         fprintf(stderr, "error: glfwInit failed.\n");
         return nullptr;
     }
 
-    // Request OpenGL 4.5 with core profile
+    // Request OpenGL 4.5 with core profile.
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     GLFWwindow *window = glfwCreateWindow(640, 480, "test window", NULL, NULL);
@@ -54,7 +56,8 @@ GLFWwindow *init() {
 }
 
 /**
- * 
+ *
+ *
  */
 string read_file(string filename) {
     ifstream in(filename);
@@ -63,7 +66,8 @@ string read_file(string filename) {
 }
 
 /**
- * 
+ *
+ *
  */
 GLuint compile_shader_file(GLenum type, const string &filename) {
 
@@ -117,7 +121,8 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
 }
 
 /**
- * 
+ *
+ *
  */
 GLuint create_program(const string &vert_src_file, const string &frag_src_file) {
     GLuint program_id = glCreateProgram();
