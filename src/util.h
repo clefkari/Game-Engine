@@ -16,11 +16,16 @@
 
 using namespace std;
 
+void glfw_error_func(int error, const char *description) {
+    fprintf(stderr, "error: glfw: %d, %s\n", error, description);
+}
+
 /**
  *
  *
  */
 GLFWwindow *init() {
+    glfwSetErrorCallback(glfw_error_func);
 
     if (!glfwInit()) {
         fprintf(stderr, "error: glfwInit failed.\n");
@@ -91,28 +96,30 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
             filename.c_str());
         return 0;
     }
-    
+
     glShaderSource(shader_id, 1, source_c_str, source_len);
     glCompileShader(shader_id);
+
+    // Check the compile status to report any errors.
     glGetShaderiv(shader_id, GL_COMPILE_STATUS, &compile_status);
 
-    // If there was an error, then print out useful info.
     if (compile_status == GL_FALSE) {
         int log_len = 0;
         glGetShaderiv(shader_id, GL_INFO_LOG_LENGTH, &log_len);
 
-        fprintf(stderr, "error: cannot compile shader from file '%s':\n",
+        fprintf(stderr, "error: cannot compile shader\n%s:",
             filename.c_str());
 
         if (log_len) {
             char *log = new char[log_len];
             glGetShaderInfoLog(shader_id, log_len, nullptr, log);
-            fprintf(stderr, "%s\n", log);
+            fprintf(stderr, "%s", log);
             delete[] log;
-        } else { 
+        } else {
             fprintf(stderr, "no info log found.\n");
         }
-
+        
+        // Delete the shader
         glDeleteShader(shader_id);
         return 0;
      }
@@ -125,11 +132,11 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
  *
  */
 GLuint create_program(const string &vert_src_file, const string &frag_src_file) {
-    GLuint program_id = glCreateProgram();
-
     GLint link_status = 0;
     GLuint vert_shader_id = 0;
     GLuint frag_shader_id = 0;
+    GLuint program_id = glCreateProgram();
+
 
     vert_shader_id = compile_shader_file(GL_VERTEX_SHADER, vert_src_file);
 
