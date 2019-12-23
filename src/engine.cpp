@@ -13,6 +13,8 @@ int main() {
 
     if (!program_id) return 0;
 
+    glUseProgram(program_id);
+
     while (!glfwWindowShouldClose(window)) {
         glClear(GL_COLOR_BUFFER_BIT);
         glfwSwapBuffers(window);

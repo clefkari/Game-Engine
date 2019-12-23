@@ -19,6 +19,43 @@ using namespace std;
 /**
  * 
  */
+GLFWwindow *init() {
+    if (!glfwInit()) {
+        fprintf(stderr, "error: glfwInit failed.\n");
+        return nullptr;
+    }
+
+    // Request OpenGL 4.5 with core profile
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    GLFWwindow *window = glfwCreateWindow(640, 480, "test window", NULL, NULL);
+
+    if (!window) {
+        fprintf(stderr, "error: glfwCreateWindow failed.\n");
+        return nullptr;
+    }
+
+    glfwMakeContextCurrent(window);
+
+    const GLenum glew_err = glewInit();
+
+    if (glew_err != GLEW_OK) {
+        fprintf(stderr, "error: glewInit failed: %s.\n",
+            glewGetErrorString(glew_err));
+        return nullptr;
+    }
+
+    //
+    fprintf(stderr, "version: %s\n", glGetString(GL_VERSION));
+
+    return window;
+}
+
+/**
+ * 
+ */
 string read_file(string filename) {
     ifstream in(filename);
     istreambuf_iterator<char> begin(in), end;
@@ -124,38 +161,6 @@ GLuint create_program(const string &vert_src_file, const string &frag_src_file) 
     }
 
     return program_id;
-}
-
-/**
- * 
- */
-GLFWwindow *init() {
-    if (!glfwInit()) {
-        fprintf(stderr, "error: glfwInit failed.\n");
-        return nullptr;
-    }
-
-    GLFWwindow *window = glfwCreateWindow(640, 480, "test window", NULL, NULL);
-
-    if (!window) {
-        fprintf(stderr, "error: glfwCreateWindow failed.\n");
-        return nullptr;
-    }
-
-    glfwMakeContextCurrent(window);
-
-    const GLenum glew_err = glewInit();
-
-    if (glew_err != GLEW_OK) {
-        fprintf(stderr, "error: glewInit failed: %s.\n",
-            glewGetErrorString(glew_err));
-        return nullptr;
-    }
-
-    //
-    fprintf(stderr, "initialized with version: %s\n", glGetString(GL_VERSION));
-
-    return window;
 }
 
 #endif
