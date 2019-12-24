@@ -21,7 +21,7 @@ int main() {
 
     glClearColor(0, .1, 1, 1);
 
-    GLfloat buf_data_a[] = {
+    GLfloat buf_data[] = {
         .0, .0,
         .9, .9,
         .9, -.9
@@ -32,7 +32,7 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, buf_id);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(buf_data_a), buf_data_a,
+    glBufferData(GL_ARRAY_BUFFER, sizeof(buf_data), buf_data,
         GL_STATIC_DRAW);
 
     GLint position_index = glGetAttribLocation(program_id, "vPosition");
