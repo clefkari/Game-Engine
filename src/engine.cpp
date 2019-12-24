@@ -19,28 +19,27 @@ int main() {
 
     // - - - - - - - - - - - TEST AREA - - - - - - - - - - - 
 
-    glClearColor(0, .1, 1, 1);
+    glClearColor(0, 0, 0.3, 1);
 
-    GLfloat buf_data[] = {
+    GLfloat vertex_data[] = {
         .0, .0,
         .9, .9,
-        .9, -.9
+        -.9, .9
     };
 
-    GLuint buf_id = 0;
-    glCreateBuffers(1, &buf_id);
+    GLuint vertex_array_id = 0, buffer_id = 0;
 
-    glBindBuffer(GL_ARRAY_BUFFER, buf_id);
+    glGenVertexArrays(1, &vertex_array_id);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(buf_data), buf_data,
+    glBindVertexArray(vertex_array_id);
+
+    glGenBuffers(1, &buffer_id);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data,
         GL_STATIC_DRAW);
 
-    GLint position_index = glGetAttribLocation(program_id, "vPosition");
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0);
     glEnableVertexAttribArray(0);
-
-    printf("position location: %d\n", position_index);
 
     // - - - - - - - - - - END TEST AREA - - - - - - - - - -
 
