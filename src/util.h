@@ -2,6 +2,7 @@
  * This file contains some utilities to keep out of the main file while
  * learning opengl. Its not really that organized but it's a place where
  * useful code can go so we can reuse it in the future.
+ * 
  */
 
 #ifndef ENGINE_UTIL_H
@@ -61,7 +62,7 @@ GLFWwindow *init() {
     }
 
     // Print out some helpful version information.
-    fprintf(stderr, "opengl: %s\nglsl: %s\nrenderer: %s\nvendor: %s\n",
+    fprintf(stderr, "opengl: %s\nglsl: %s\nrenderer: %s\nvendor: %s\n\n",
         glGetString(GL_VERSION),
         glGetString(GL_SHADING_LANGUAGE_VERSION),
         glGetString(GL_RENDERER),
@@ -139,11 +140,10 @@ GLuint compile_shader_file(GLenum type, const string &filename) {
  *
  */
 GLuint create_program(const string &vert_src_file, const string &frag_src_file) {
-    GLint link_status = 0;
     GLuint vert_shader_id = 0;
     GLuint frag_shader_id = 0;
     GLuint program_id = glCreateProgram();
-
+    GLint link_status = 0;
 
     // Compile vetex shader and attach if successful.
     vert_shader_id = compile_shader_file(GL_VERTEX_SHADER, vert_src_file);
