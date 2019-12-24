@@ -7,7 +7,7 @@ int main() {
 
     // Initialize OpenGL, GLFW, GLEW, and create a window.
     GLFWwindow *window = init();
-/*
+
     // Specify the vertex and fragment shaders,
     GLuint program_id = create_program(
         "./src/vertex-shader.glsl",
@@ -16,7 +16,7 @@ int main() {
     if (!program_id) return 0;
 
     glUseProgram(program_id);
-*/
+
     // - - - - - - - - - - - TEST AREA - - - - - - - - - - - 
 
     glClearColor(0, .1, 1, 1);
