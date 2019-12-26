@@ -18,26 +18,25 @@
 using namespace std;
 
 #define WRAP_GL(stmt) stmt; \
-pollErrors(#stmt, __FILE__, __LINE__);
+poll_errors(#stmt, __FILE__, __LINE__);
 
-
-#define RESET   "\033[0m"
-#define BLACK   "\033[30m"
-#define RED     "\033[31m"
-#define GREEN   "\033[32m"
-#define YELLOW  "\033[33m"
-#define BLUE    "\033[34m"
+#define RESET "\033[0m"
+#define BLACK "\033[30m"
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE "\033[34m"
 #define MAGENTA "\033[35m"
-#define CYAN    "\033[36m"
-#define WHITE   "\033[37m"
-#define BOLDBLACK   "\033[1m\033[30m"
-#define BOLDRED     "\033[1m\033[31m"
-#define BOLDGREEN   "\033[1m\033[32m"
-#define BOLDYELLOW  "\033[1m\033[33m"
-#define BOLDBLUE    "\033[1m\033[34m"
+#define CYAN "\033[36m"
+#define WHITE "\033[37m"
+#define BOLDBLACK "\033[1m\033[30m"
+#define BOLDRED "\033[1m\033[31m"
+#define BOLDGREEN "\033[1m\033[32m"
+#define BOLDYELLOW "\033[1m\033[33m"
+#define BOLDBLUE "\033[1m\033[34m"
 #define BOLDMAGENTA "\033[1m\033[35m"
-#define BOLDCYAN    "\033[1m\033[36m"
-#define BOLDWHITE   "\033[1m\033[37m"
+#define BOLDCYAN "\033[1m\033[36m"
+#define BOLDWHITE "\033[1m\033[37m"
 
 // Some strings for error output.
 const char STR_GL_NO_ERROR[] = "GL_NO_ERROR";
@@ -47,8 +46,8 @@ const char STR_GL_INVALID_OPERATION[] = "GL_INVALID_OPERATION";
 const char STR_GL_STACK_OVERFLOW[] = "GL_STACK_OVERFLOW";
 const char STR_GL_STACK_UNDERFLOW[] = "GL_STACK_UNDERFLOW";
 const char STR_GL_OUT_OF_MEMORY[] = "GL_OUT_OF_MEMORY";
-const char STR_GL_INVALID_FRAMEBUFFER_OPERATION[] = 
-    "GL_INVALID_FRAMEBUFFER_OPERATION";
+const char STR_GL_INVALID_FRAMEBUFFER_OPERATION[] = "GL_INVALID_FRAMEBUFFER_"
+    "OPERATION";
 const char STR_GL_CONTEXT_LOST[] = "GL_CONTEXT_LOST";
 
 /**
@@ -63,8 +62,8 @@ const char *get_err_str(GLenum err) {
         case GL_STACK_OVERFLOW: return STR_GL_STACK_OVERFLOW;
         case GL_STACK_UNDERFLOW: return STR_GL_STACK_UNDERFLOW;
         case GL_OUT_OF_MEMORY: return STR_GL_OUT_OF_MEMORY;
-        case GL_INVALID_FRAMEBUFFER_OPERATION:
-            return STR_GL_INVALID_FRAMEBUFFER_OPERATION;
+        case GL_INVALID_FRAMEBUFFER_OPERATION: return
+            STR_GL_INVALID_FRAMEBUFFER_OPERATION;
         case GL_CONTEXT_LOST: return STR_GL_CONTEXT_LOST;
         default: return nullptr;
     }
@@ -74,7 +73,7 @@ const char *get_err_str(GLenum err) {
 /**
  * 
  */
-void pollErrors(const char *stmt, const char *filename, unsigned int line) {
+void poll_errors(const char *stmt, const char *filename, unsigned int line) {
     GLenum err;
     if ((err = glGetError()) != GL_NO_ERROR) {
         fprintf(stderr, "error: opengl: %s\n" BOLDWHITE " %s:%d  " RED "%s"

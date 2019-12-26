@@ -19,7 +19,7 @@ int main() {
 
     WRAP_GL(glUseProgram(program_id));
 
-    GLfloat verts[] = { 0,0,  1,0,  1,1,  0,1 };
+    GLfloat verts[] = { -1,-1,  1,-1,  1,1,  -1,1 };
 
     GLuint indices[] = { 0, 1, 2, 3 };
 
