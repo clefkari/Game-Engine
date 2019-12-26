@@ -14,6 +14,7 @@ int main() {
     GLuint program_id = create_program(
         "./src/vertex-shader.glsl",
         "./src/fragment-shader.glsl");
+
     if (!program_id) return 0;
 
     WRAP_GL(glUseProgram(program_id));
