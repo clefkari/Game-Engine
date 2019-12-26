@@ -17,6 +17,72 @@
 
 using namespace std;
 
+#define WRAP_GL(stmt) stmt; \
+pollErrors(#stmt, __FILE__, __LINE__);
+
+
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define YELLOW  "\033[33m"
+#define BLUE    "\033[34m"
+#define MAGENTA "\033[35m"
+#define CYAN    "\033[36m"
+#define WHITE   "\033[37m"
+#define BOLDBLACK   "\033[1m\033[30m"
+#define BOLDRED     "\033[1m\033[31m"
+#define BOLDGREEN   "\033[1m\033[32m"
+#define BOLDYELLOW  "\033[1m\033[33m"
+#define BOLDBLUE    "\033[1m\033[34m"
+#define BOLDMAGENTA "\033[1m\033[35m"
+#define BOLDCYAN    "\033[1m\033[36m"
+#define BOLDWHITE   "\033[1m\033[37m"
+
+// Some strings for error output.
+const char STR_GL_NO_ERROR[] = "GL_NO_ERROR";
+const char STR_GL_INVALID_ENUM[] = "GL_INVALID_ENUM";
+const char STR_GL_INVALID_VALUE[] = "GL_INVALID_VALUE";
+const char STR_GL_INVALID_OPERATION[] = "GL_INVALID_OPERATION";
+const char STR_GL_STACK_OVERFLOW[] = "GL_STACK_OVERFLOW";
+const char STR_GL_STACK_UNDERFLOW[] = "GL_STACK_UNDERFLOW";
+const char STR_GL_OUT_OF_MEMORY[] = "GL_OUT_OF_MEMORY";
+const char STR_GL_INVALID_FRAMEBUFFER_OPERATION[] = 
+    "GL_INVALID_FRAMEBUFFER_OPERATION";
+const char STR_GL_CONTEXT_LOST[] = "GL_CONTEXT_LOST";
+
+/**
+ * Get the string value of an opengl error enum.
+ */
+const char *get_err_str(GLenum err) {
+    switch (err) {
+        case GL_NO_ERROR: return STR_GL_NO_ERROR;
+        case GL_INVALID_ENUM: return STR_GL_INVALID_ENUM;
+        case GL_INVALID_VALUE: return STR_GL_INVALID_VALUE;
+        case GL_INVALID_OPERATION: return STR_GL_INVALID_OPERATION;
+        case GL_STACK_OVERFLOW: return STR_GL_STACK_OVERFLOW;
+        case GL_STACK_UNDERFLOW: return STR_GL_STACK_UNDERFLOW;
+        case GL_OUT_OF_MEMORY: return STR_GL_OUT_OF_MEMORY;
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+            return STR_GL_INVALID_FRAMEBUFFER_OPERATION;
+        case GL_CONTEXT_LOST: return STR_GL_CONTEXT_LOST;
+        default: return nullptr;
+    }
+}
+
+
+/**
+ * 
+ */
+void pollErrors(const char *stmt, const char *filename, unsigned int line) {
+    GLenum err;
+    if ((err = glGetError()) != GL_NO_ERROR) {
+        fprintf(stderr, "error: opengl: %s\n" BOLDWHITE " %s:%d  " RED "%s"
+            RESET "\n\n", get_err_str(err), filename, line, stmt);
+        throw runtime_error(get_err_str(err));
+    }
+}
+
 /**
  * GLFW Error callback function. Simply prints to stderr.
  */
@@ -62,70 +128,12 @@ GLFWwindow *init() {
     }
 
     // Print out some helpful version information.
-    fprintf(stderr, "opengl: %s\nglsl: %s\nrenderer: %s\nvendor: %s\n\n",
+    fprintf(stderr, "opengl: %s\nglsl: %s\n\n",
         glGetString(GL_VERSION),
-        glGetString(GL_SHADING_LANGUAGE_VERSION),
-        glGetString(GL_RENDERER),
-        glGetString(GL_VENDOR));
+        glGetString(GL_SHADING_LANGUAGE_VERSION));
 
     return window;
 }
-
-const char STR_GL_NO_ERROR[] = "GL_NO_ERROR";
-const char STR_GL_INVALID_ENUM[] = "GL_INVALID_ENUM";
-const char STR_GL_INVALID_VALUE[] = "GL_INVALID_VALUE";
-const char STR_GL_INVALID_OPERATION[] = "GL_INVALID_OPERATION";
-const char STR_GL_STACK_OVERFLOW[] = "GL_STACK_OVERFLOW";
-const char STR_GL_STACK_UNDERFLOW[] = "GL_STACK_UNDERFLOW";
-const char STR_GL_OUT_OF_MEMORY[] = "GL_OUT_OF_MEMORY";
-const char STR_GL_INVALID_FRAMEBUFFER_OPERATION[] = 
-    "GL_INVALID_FRAMEBUFFER_OPERATION";
-const char STR_GL_CONTEXT_LOST[] = "GL_CONTEXT_LOST";
-
-const char *get_err_str(GLenum err) {
-    switch (err) {
-        case GL_NO_ERROR: 
-            return STR_GL_NO_ERROR;
-        case GL_INVALID_ENUM: 
-            return STR_GL_INVALID_ENUM;
-        case GL_INVALID_VALUE: 
-            return STR_GL_INVALID_VALUE;
-        case GL_INVALID_OPERATION: 
-            return STR_GL_INVALID_OPERATION;
-        case GL_STACK_OVERFLOW:
-            return STR_GL_STACK_OVERFLOW;
-        case GL_STACK_UNDERFLOW:
-            return STR_GL_STACK_UNDERFLOW;
-        case GL_OUT_OF_MEMORY:
-            return STR_GL_OUT_OF_MEMORY;
-        case GL_INVALID_FRAMEBUFFER_OPERATION:
-            return STR_GL_INVALID_FRAMEBUFFER_OPERATION;
-        case GL_CONTEXT_LOST:
-            return STR_GL_CONTEXT_LOST;
-        default:
-            return nullptr;
-    }
-}
-
-#define RESET   "\033[0m"
-#define BLACK   "\033[30m"      /* Black */
-#define RED     "\033[31m"      /* Red */
-#define GREEN   "\033[32m"      /* Green */
-#define YELLOW  "\033[33m"      /* Yellow */
-#define BLUE    "\033[34m"      /* Blue */
-#define MAGENTA "\033[35m"      /* Magenta */
-#define CYAN    "\033[36m"      /* Cyan */
-#define WHITE   "\033[37m"      /* White */
-#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
-#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
-#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
-#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
-#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
-#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
-#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
-#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
-
-
 
 /**
  * Just read in a file as a string.

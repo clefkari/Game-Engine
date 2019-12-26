@@ -4,28 +4,18 @@
 
 #include "util.h"
 
-#define WRAP_GL(stmt) stmt; \
-pollErrors(#stmt, __FILE__, __LINE__);
-
-
-void pollErrors(const char *stmt, const char *filename, unsigned int line) {
-    GLenum err;
-    if ((err = glGetError()) != GL_NO_ERROR) {
-        fprintf(stderr, "error: opengl: %s\n" BOLDWHITE " %s:%d  " RED "%s"
-            RESET "\n\n", get_err_str(err), filename, line, stmt);
-        throw runtime_error(get_err_str(err));
-    }
-}
-
 
 int main() {
+
     // Initialize OpenGL, GLFW, GLEW, and create a window.
     GLFWwindow *window = init();
+
     // Specify the vertex and fragment shaders,
     GLuint program_id = create_program(
         "./src/vertex-shader.glsl",
         "./src/fragment-shader.glsl");
     if (!program_id) return 0;
+
     WRAP_GL(glUseProgram(program_id));
 
     GLfloat verts[] = { 0,0,  1,0,  1,1,  0,1 };
@@ -38,10 +28,6 @@ int main() {
     WRAP_GL( glGenVertexArrays(num_vaos, vaos) );
     WRAP_GL( glGenBuffers(num_vbos, vbos) );
     WRAP_GL( glGenBuffers(num_ibos, ibos) );
-
-    fprintf(stderr, "vaos: %d %d\n", vaos[0], vaos[1]);
-    fprintf(stderr, "vbos: %d %d\n", vbos[0], vbos[1]);
-    fprintf(stderr, "ibos: %d\n\n", ibos[0]);
 
     WRAP_GL( glBindVertexArray(vaos[0]) );
     WRAP_GL( glBindBuffer(GL_ARRAY_BUFFER, vbos[0]) );
@@ -58,7 +44,6 @@ int main() {
 
         WRAP_GL( glClear(GL_COLOR_BUFFER_BIT) );
         WRAP_GL( glDrawArrays(GL_TRIANGLES, 0, 3) );
-
         WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_INT, 0) );
 
         glfwSwapBuffers(window);
