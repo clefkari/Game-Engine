@@ -71,6 +71,62 @@ GLFWwindow *init() {
     return window;
 }
 
+const char STR_GL_NO_ERROR[] = "GL_NO_ERROR";
+const char STR_GL_INVALID_ENUM[] = "GL_INVALID_ENUM";
+const char STR_GL_INVALID_VALUE[] = "GL_INVALID_VALUE";
+const char STR_GL_INVALID_OPERATION[] = "GL_INVALID_OPERATION";
+const char STR_GL_STACK_OVERFLOW[] = "GL_STACK_OVERFLOW";
+const char STR_GL_STACK_UNDERFLOW[] = "GL_STACK_UNDERFLOW";
+const char STR_GL_OUT_OF_MEMORY[] = "GL_OUT_OF_MEMORY";
+const char STR_GL_INVALID_FRAMEBUFFER_OPERATION[] = 
+    "GL_INVALID_FRAMEBUFFER_OPERATION";
+const char STR_GL_CONTEXT_LOST[] = "GL_CONTEXT_LOST";
+
+const char *get_err_str(GLenum err) {
+    switch (err) {
+        case GL_NO_ERROR: 
+            return STR_GL_NO_ERROR;
+        case GL_INVALID_ENUM: 
+            return STR_GL_INVALID_ENUM;
+        case GL_INVALID_VALUE: 
+            return STR_GL_INVALID_VALUE;
+        case GL_INVALID_OPERATION: 
+            return STR_GL_INVALID_OPERATION;
+        case GL_STACK_OVERFLOW:
+            return STR_GL_STACK_OVERFLOW;
+        case GL_STACK_UNDERFLOW:
+            return STR_GL_STACK_UNDERFLOW;
+        case GL_OUT_OF_MEMORY:
+            return STR_GL_OUT_OF_MEMORY;
+        case GL_INVALID_FRAMEBUFFER_OPERATION:
+            return STR_GL_INVALID_FRAMEBUFFER_OPERATION;
+        case GL_CONTEXT_LOST:
+            return STR_GL_CONTEXT_LOST;
+        default:
+            return nullptr;
+    }
+}
+
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"      /* Black */
+#define RED     "\033[31m"      /* Red */
+#define GREEN   "\033[32m"      /* Green */
+#define YELLOW  "\033[33m"      /* Yellow */
+#define BLUE    "\033[34m"      /* Blue */
+#define MAGENTA "\033[35m"      /* Magenta */
+#define CYAN    "\033[36m"      /* Cyan */
+#define WHITE   "\033[37m"      /* White */
+#define BOLDBLACK   "\033[1m\033[30m"      /* Bold Black */
+#define BOLDRED     "\033[1m\033[31m"      /* Bold Red */
+#define BOLDGREEN   "\033[1m\033[32m"      /* Bold Green */
+#define BOLDYELLOW  "\033[1m\033[33m"      /* Bold Yellow */
+#define BOLDBLUE    "\033[1m\033[34m"      /* Bold Blue */
+#define BOLDMAGENTA "\033[1m\033[35m"      /* Bold Magenta */
+#define BOLDCYAN    "\033[1m\033[36m"      /* Bold Cyan */
+#define BOLDWHITE   "\033[1m\033[37m"      /* Bold White */
+
+
+
 /**
  * Just read in a file as a string.
  */

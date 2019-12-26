@@ -3,50 +3,63 @@
 
 #include "util.h"
 
-int main() {
+#define WRAP_GL(stmt) stmt; \
+pollErrors(#stmt, __FILE__, __LINE__);
 
+void pollErrors(const char *stmt, const char *filename, unsigned int line) {
+    GLenum err;
+    while ((err = glGetError()) != GL_NO_ERROR) {
+        fprintf(stderr, "error: opengl: %s\n" BOLDWHITE " %s:%d  " RED "%s" 
+            RESET "\n\n", get_err_str(err), filename, line, stmt);
+    }
+}
+
+
+int main() {
     // Initialize OpenGL, GLFW, GLEW, and create a window.
     GLFWwindow *window = init();
-
     // Specify the vertex and fragment shaders,
     GLuint program_id = create_program(
         "./src/vertex-shader.glsl",
         "./src/fragment-shader.glsl");
-
     if (!program_id) return 0;
+    WRAP_GL(glUseProgram(program_id));
 
-    glUseProgram(program_id);
+    float verts_a[] = {0,  0,    1,  1,   -1,  1};
+    float verts_b[] = {0,  0,    1,  -1,   -1,  -1};
 
-    // - - - - - - - - - - - TEST AREA - - - - - - - - - - - 
+    const int num_vaos = 2, num_vbos = 2;
+    GLuint vaos[num_vaos], vbos[num_vbos];
 
-    glClearColor(0, 0, 0.3, 1);
+    WRAP_GL( glGenVertexArrays(num_vaos, vaos) );
+    WRAP_GL( glGenBuffers(num_vbos, vbos) );
 
-    GLfloat vertex_data[] = {
-        .0, .0,
-        .9, .9,
-        -.9, .9
-    };
+    WRAP_GL( glBindVertexArray(vaos[0]) );
+    WRAP_GL( glBindBuffer(GL_ARRAY_BUFFER, vbos[0]) );
+    WRAP_GL( glEnableVertexAttribArray(0) );
+    WRAP_GL( glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0) );
+    WRAP_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(verts_a), verts_a, GL_STATIC_DRAW) );
 
-    GLuint vertex_array_id = 0, buffer_id = 0;
 
-    glGenVertexArrays(1, &vertex_array_id);
+    WRAP_GL( glBindVertexArray(vaos[1]) );
+    WRAP_GL( glBindBuffer(GL_ARRAY_BUFFER, vbos[1]) );
+    WRAP_GL( glEnableVertexAttribArray(0) );
+    WRAP_GL( glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0) );
+    WRAP_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(verts_b), verts_b, GL_STATIC_DRAW) );
 
-    glBindVertexArray(vertex_array_id);
-
-    glGenBuffers(1, &buffer_id);
-    glBindBuffer(GL_ARRAY_BUFFER, buffer_id);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data,
-        GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0);
-    glEnableVertexAttribArray(0);
-
-    // - - - - - - - - - - END TEST AREA - - - - - - - - - -
+    int i = 0;
+    int j = 0;
 
     while (!glfwWindowShouldClose(window)) {
-        glClear(GL_COLOR_BUFFER_BIT);
+        WRAP_GL(glClear(GL_COLOR_BUFFER_BIT));
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        if (i++%50 == 0) {
+            int b = j++ % 2;
+            WRAP_GL( glBindVertexArray(vaos[b]) );
+            WRAP_GL( glBindBuffer(GL_ARRAY_BUFFER, vbos[b]) );
+        }
+
+        WRAP_GL( glDrawArrays(GL_TRIANGLES, 0, 3) );
 
         glfwSwapBuffers(window);
         glfwPollEvents();
