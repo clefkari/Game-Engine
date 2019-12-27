@@ -7,6 +7,7 @@
 #include "util.h"
 
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
@@ -96,10 +97,29 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
 
         // Set the value of the uniform variable.
-        WRAP_GL( glUniform1f(loc, t) );
+        WRAP_GL( loc = glGetUniformLocation(program_id, "uTime") );
+        WRAP_GL( glUniform1f(glGetUniformLocation(program_id, "uTime"), t) );
 
         // Clear the screen.
         WRAP_GL( glClear(GL_COLOR_BUFFER_BIT) );
+
+        float theta = 0, sc = 1;
+
+        glm::vec3 trans = {0, 0, 0};
+
+        glm::mat4 mvp_mat(1);
+
+        mvp_mat = glm::rotate(mvp_mat, t/10, glm::vec3(1, 0, 0));
+        mvp_mat = glm::rotate(mvp_mat, t/20, glm::vec3(0, 1, 0));
+        mvp_mat = glm::rotate(mvp_mat, t, glm::vec3(0, 0, 1));
+        mvp_mat = glm::scale(mvp_mat, glm::vec3(sc, sc, sc));
+        mvp_mat = glm::translate(mvp_mat, trans);
+
+        //mvp_mat = glm::mat4(1);
+
+        WRAP_GL( loc = glGetUniformLocation(program_id, "uModelViewProjection") );
+        WRAP_GL( glUniformMatrix4fv(loc, 1, GL_FALSE, (const GLfloat *) &mvp_mat) );
+
 
         // Draw a triangle strip according to the index buffer (the list of
         // vertex indices).
