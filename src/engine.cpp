@@ -40,10 +40,8 @@ int main() {
 
     stbi_image_free(image);
     
-    
-
     // Vertex and index data.
-    Vertex verts[6*2*3] = {
+    Vertex verts[8] = {
         {{0, 0, 1},  {.5, .5, .5}},
         {{1, 0, 1},  {0, 0, 1}},
         {{0, 1, 1},  {0, 1, 0}},
@@ -53,6 +51,7 @@ int main() {
         {{0, 1, 0},  {1, 1, 0}},
         {{1, 1, 0},  {1, 1, 1}},
     };
+
     GLuint indices[] = { 0, 1, 2, 3, 7, 1, 5, 4, 7, 6, 2, 4, 0, 1 };
 
     // The number of each type of object to create.
@@ -103,7 +102,7 @@ int main() {
 
         // Set the value of the uniform variable.
         WRAP_GL( loc = glGetUniformLocation(program_id, "uTime") );
-        WRAP_GL( glUniform1f(glGetUniformLocation(program_id, "uTime"), 0) );
+        WRAP_GL( glUniform1f(glGetUniformLocation(program_id, "uTime"), t) );
 
         // Clear the screen.
         WRAP_GL( glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) );
@@ -111,7 +110,6 @@ int main() {
         float theta = 0, sc = .5;
 
         glm::vec3 trans = {0, 0, 0};
-
         glm::mat4 mvp_mat = glm::mat4(1);
 
         mvp_mat = glm::rotate(mvp_mat, t, glm::vec3(0, .707, .707));

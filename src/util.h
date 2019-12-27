@@ -24,7 +24,7 @@ poll_errors(#stmt, __FILE__, __LINE__);
 
 #define POINTER_OFFSET(class, field) ((const GLvoid *) offsetof(class, field))
 
-#define RESET "\033[0m"
+// Some colors for debug messages.
 #define BLACK "\033[30m"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
@@ -41,6 +41,7 @@ poll_errors(#stmt, __FILE__, __LINE__);
 #define BOLDMAGENTA "\033[1m\033[35m"
 #define BOLDCYAN "\033[1m\033[36m"
 #define BOLDWHITE "\033[1m\033[37m"
+#define RESET "\033[0m"
 
 // Some strings for error output.
 const char STR_GL_NO_ERROR[] = "GL_NO_ERROR";
@@ -106,10 +107,11 @@ GLFWwindow *init() {
         return nullptr;
     }
 
-    // Request OpenGL 4.5 with core profile.
+    // Request OpenGL 4.3 with core profile.
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
     GLFWwindow *window = glfwCreateWindow(960, 960, "test window", NULL, NULL);
 
