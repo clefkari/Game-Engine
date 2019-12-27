@@ -23,12 +23,17 @@ int main() {
 
     WRAP_GL( glUseProgram(program_id) );
 
+    struct Vertex {
+        vec2 position;
+        vec4 color;
+    };
+
     // Vertex and index data.
-    vec4 verts[] = {
-        {{-.9, .9, 0, 1}},
-        {{.9, .9, 0, 1}},
-        {{-.9, -.9, 0, 1}},
-        {{.9, -.9, 0, 1}},
+    Vertex verts[] = {
+        { {-.9, .9},  {1, 0, 0, 1} },
+        { {.9, .9},   {0, 1, 0, 1} },
+        { {-.9, -.9}, {0, 0, 1, 1} },
+        { {.9, -.9},  {1, 0, 1, 1} }
     };
 
     GLuint indices[] = { 0, 1, 2, 3 };
@@ -53,17 +58,37 @@ int main() {
         GL_STATIC_DRAW) );
 
     // Tell OpenGL about the position attribute.
-    WRAP_GL( glEnableVertexAttribArray(0) );
-    WRAP_GL( glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0) );
+    GLint loc = -1;
+
+    WRAP_GL( loc = glGetAttribLocation(program_id, "vPosition") );
+    WRAP_GL( glEnableVertexAttribArray(loc) );
+    WRAP_GL( glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        (const void *)offsetof(Vertex, position)) );
+
+    // Tell OpenGL about the color attribute.
+    WRAP_GL( loc = glGetAttribLocation(program_id, "vColor") );
+    WRAP_GL( glEnableVertexAttribArray(loc) );
+    WRAP_GL( glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        (const void *)offsetof(Vertex, color)) );
+
+    loc = glGetUniformLocation(program_id, "uTime");
+
 
     // Bind the index buffer and load index data.
     WRAP_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibos[0]) );
     WRAP_GL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
         GL_STATIC_DRAW) );
 
+    float t = 0;
+    glPointSize(20);
+
     while (!glfwWindowShouldClose(window)) {
 
+        WRAP_GL( glUniform1f(loc, t) );
+        t += 0.003;
+
         WRAP_GL( glClear(GL_COLOR_BUFFER_BIT) );
+    
         WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, 0) );
 
         glfwSwapBuffers(window);
