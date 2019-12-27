@@ -15,7 +15,7 @@ struct vec {
             elements[i] = 0;
     }
 
-    vec(const T (&els)[N]) {
+    vec(const T &els[N]) {
         for (int i = 0; i < N; i++)
             elements[i] = els[i];
     }
@@ -36,7 +36,6 @@ struct vec {
                 "invalid index (%d) for vec of size %d", i, N);
             throw runtime_error(VEC_ERR_BUF);
         }
-
         return elements[i];
     }
 
@@ -46,7 +45,6 @@ struct vec {
             res.elements[i] = at(i) + other.at(i);
         return res;
     }
-
 
     vec<N, T> operator -(const vec<N, T> &other) const {
         vec<N, T> res;
