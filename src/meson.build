@@ -6,7 +6,7 @@ include_dirs = include_directories(['.'])
 sources = ['engine.cpp']
 
 if (host_machine.system() == 'darwin')
-	engine_exe = executable('engine',
+    engine_exe = executable('engine',
         include_directories: include_dirs,
  		sources : sources,
 		dependencies : [glfw3_dep, glew_dep, dependency('appleframeworks',
