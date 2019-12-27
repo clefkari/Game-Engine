@@ -80,19 +80,17 @@ int main() {
         GL_STATIC_DRAW) );
 
     float t = 0;
-    glPointSize(20);
 
     while (!glfwWindowShouldClose(window)) {
 
         WRAP_GL( glUniform1f(loc, t) );
-        t += 0.003;
-
         WRAP_GL( glClear(GL_COLOR_BUFFER_BIT) );
-    
         WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, 0) );
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        t += 0.003;
     }
 
     glfwTerminate();
