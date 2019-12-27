@@ -18,22 +18,19 @@ int main() {
         "./src/vertex-shader.glsl",
         "./src/fragment-shader.glsl");
 
-    if (!program_id)
-        return 0;
-
     WRAP_GL( glUseProgram(program_id) );
 
     struct Vertex {
         vec2 position;
-        vec4 color;
+        vec3 color;
     };
 
     // Vertex and index data.
     Vertex verts[] = {
-        { {-.9, .9},  {1, 0, 0, 1} },
-        { {.9, .9},   {0, 1, 0, 1} },
-        { {-.9, -.9}, {0, 0, 1, 1} },
-        { {.9, -.9},  {0, 1, 1, 1} }
+        {{-.9, .9},  {1, 0, 0}},
+        {{.9, .9},   {0, 1, 0}},
+        {{-.9, -.9}, {0, 0, 1}},
+        {{.9, -.9},  {0, 1, 1}}
     };
 
     GLuint indices[] = { 0, 1, 2, 3 };
@@ -57,22 +54,22 @@ int main() {
     WRAP_GL( glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts,
         GL_STATIC_DRAW) );
 
-    // Tell OpenGL about the position attribute.
+    // Location of variables in the shader program.
     GLint loc = -1;
 
+    // Tell OpenGL about the position attribute.
     WRAP_GL( loc = glGetAttribLocation(program_id, "vPosition") );
     WRAP_GL( glEnableVertexAttribArray(loc) );
     WRAP_GL( glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        OFFSET_CLASS(Vertex, position)) );
+        POINTER_OFFSET(Vertex, position)) );
 
     // Tell OpenGL about the color attribute.
     WRAP_GL( loc = glGetAttribLocation(program_id, "vColor") );
     WRAP_GL( glEnableVertexAttribArray(loc) );
-    WRAP_GL( glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        OFFSET_CLASS(Vertex, color)) );
+    WRAP_GL( glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+        POINTER_OFFSET(Vertex, color)) );
 
     loc = glGetUniformLocation(program_id, "uTime");
-
 
     // Bind the index buffer and load index data.
     WRAP_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibos[0]) );
@@ -81,16 +78,24 @@ int main() {
 
     float t = 0;
 
+    float dt = 0;
+
     while (!glfwWindowShouldClose(window)) {
 
+        // Set the value of the uniform variable.
         WRAP_GL( glUniform1f(loc, t) );
+
+        // Clear the screen.
         WRAP_GL( glClear(GL_COLOR_BUFFER_BIT) );
+
+        // Draw a triangle strip according to the index buffer (the list of
+        // vertex indices).
         WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, 0) );
 
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        t += 0.003;
+        t += dt += (rand()%100 - 50)/10000.;
     }
 
     glfwTerminate();
