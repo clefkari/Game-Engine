@@ -24,11 +24,11 @@ int main() {
     WRAP_GL( glUseProgram(program_id) );
 
     // Vertex and index data.
-    vec3 verts[] = {
-        {{-1, 1, 0}},
-        {{1, 1, 0}},
-        {{-1, -1, 0}},
-        {{1, -1, 0}},
+    vec4 verts[] = {
+        {{-1, 1, 0, 1}},
+        {{1, 1, 0, 1}},
+        {{-1, -1, 0, 1}},
+        {{1, -1, 0, 1}},
     };
 
     GLuint indices[] = { 0, 1, 2, 3 };
@@ -54,7 +54,7 @@ int main() {
 
     // Tell OpenGL about the position attribute.
     WRAP_GL( glEnableVertexAttribArray(0) );
-    WRAP_GL( glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0) );
+    WRAP_GL( glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0) );
 
     // Bind the index buffer and load index data.
     WRAP_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibos[0]) );
