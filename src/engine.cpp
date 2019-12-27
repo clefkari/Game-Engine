@@ -63,13 +63,13 @@ int main() {
     WRAP_GL( loc = glGetAttribLocation(program_id, "vPosition") );
     WRAP_GL( glEnableVertexAttribArray(loc) );
     WRAP_GL( glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        (const void *)offsetof(Vertex, position)) );
+        OFFSET_CLASS(Vertex, position)) );
 
     // Tell OpenGL about the color attribute.
     WRAP_GL( loc = glGetAttribLocation(program_id, "vColor") );
     WRAP_GL( glEnableVertexAttribArray(loc) );
     WRAP_GL( glVertexAttribPointer(loc, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-        (const void *)offsetof(Vertex, color)) );
+        OFFSET_CLASS(Vertex, color)) );
 
     loc = glGetUniformLocation(program_id, "uTime");
 

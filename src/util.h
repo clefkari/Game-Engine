@@ -22,6 +22,8 @@ using namespace std;
 #define WRAP_GL(stmt) stmt; \
 poll_errors(#stmt, __FILE__, __LINE__);
 
+#define OFFSET_CLASS(class, field) ((const GLvoid *) offsetof(class, field))
+
 #define RESET "\033[0m"
 #define BLACK "\033[30m"
 #define RED "\033[31m"
