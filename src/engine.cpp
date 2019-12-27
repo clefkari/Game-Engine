@@ -129,6 +129,7 @@ int main() {
         // Draw a triangle strip according to the index buffer (the list of
         // vertex indices).
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glLineWidth(5);
         WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 14, GL_UNSIGNED_INT, 0) );
 
         glfwSwapBuffers(window);
