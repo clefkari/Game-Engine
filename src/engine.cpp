@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include <iostream>
+#include <vector>
 
 #include "util.h"
 
@@ -27,7 +28,7 @@ int main() {
     WRAP_GL( glUseProgram(program_id) );
 
     struct Vertex {
-        glm::vec2 position;
+        glm::vec3 position;
         glm::vec3 color;
     };
 
@@ -42,14 +43,17 @@ int main() {
     
 
     // Vertex and index data.
-    Vertex verts[] = {
-        {{-.9, .9},  {1, 0, 0}},
-        {{.9, .9},   {0, 1, 0}},
-        {{-.9, -.9}, {0, 0, 1}},
-        {{.9, -.9},  {0, 1, 1}}
+    Vertex verts[6*2*3] = {
+        {{0, 0, 1},  {.5, .5, .5}},
+        {{1, 0, 1},  {0, 0, 1}},
+        {{0, 1, 1},  {0, 1, 0}},
+        {{1, 1, 1},  {0, 1, 1}},
+        {{0, 0, 0},  {1, 0, 0}},
+        {{1, 0, 0},  {1, 0, 1}},
+        {{0, 1, 0},  {1, 1, 0}},
+        {{1, 1, 0},  {1, 1, 1}},
     };
-
-    GLuint indices[] = { 0, 1, 2, 3 };
+    GLuint indices[] = { 0, 1, 2, 3, 7, 1, 5, 4, 7, 6, 2, 4, 0, 1 };
 
     // The number of each type of object to create.
     const int num_vaos = 1, num_vbos = 1, num_ibos = 1;
@@ -76,7 +80,7 @@ int main() {
     // Tell OpenGL about the position attribute.
     WRAP_GL( loc = glGetAttribLocation(program_id, "vPosition") );
     WRAP_GL( glEnableVertexAttribArray(loc) );
-    WRAP_GL( glVertexAttribPointer(loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+    WRAP_GL( glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
         POINTER_OFFSET(Vertex, position)) );
 
     // Tell OpenGL about the color attribute.
@@ -98,21 +102,22 @@ int main() {
 
         // Set the value of the uniform variable.
         WRAP_GL( loc = glGetUniformLocation(program_id, "uTime") );
-        WRAP_GL( glUniform1f(glGetUniformLocation(program_id, "uTime"), t) );
+        WRAP_GL( glUniform1f(glGetUniformLocation(program_id, "uTime"), 0) );
 
         // Clear the screen.
         WRAP_GL( glClear(GL_COLOR_BUFFER_BIT) );
 
-        float theta = 0, sc = 1;
+        float theta = 0, sc = .75;
 
-        glm::vec3 trans = {0, 0, 0};
+        glm::vec3 trans = {-.5, -.5, -.5};
 
         glm::mat4 mvp_mat(1);
+
+        mvp_mat = glm::scale(mvp_mat, glm::vec3(sc, sc, sc));
 
         mvp_mat = glm::rotate(mvp_mat, t/10, glm::vec3(1, 0, 0));
         mvp_mat = glm::rotate(mvp_mat, t/20, glm::vec3(0, 1, 0));
         mvp_mat = glm::rotate(mvp_mat, t, glm::vec3(0, 0, 1));
-        mvp_mat = glm::scale(mvp_mat, glm::vec3(sc, sc, sc));
         mvp_mat = glm::translate(mvp_mat, trans);
 
         //mvp_mat = glm::mat4(1);
@@ -123,12 +128,13 @@ int main() {
 
         // Draw a triangle strip according to the index buffer (the list of
         // vertex indices).
-        WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, 0) );
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 14, GL_UNSIGNED_INT, 0) );
 
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        t += dt += (rand()%10 - 5)/10000.;
+        t += .01;//dt += (rand()%10 - 5)/100000.;
     }
 
     glfwTerminate();

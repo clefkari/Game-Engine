@@ -13,5 +13,5 @@ void main() {
     color = vColor*pow(cos(uTime), 2);
     color += (1 - vColor)*(1 - pow(cos(uTime), 2));
 
-    gl_Position = uModelViewProjection * (.5*vPosition);
+    gl_Position = uModelViewProjection * vPosition;
 }
