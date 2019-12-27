@@ -4,4 +4,6 @@ project('Game_Engine','cpp',
 										'b_coverage=false',
 										'cpp_std=c++14'])
 
+include = include_directories('./inc/', './inc/glm/')
+
 subdir('src')

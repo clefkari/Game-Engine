@@ -4,10 +4,15 @@
 
 #include <iostream>
 
+#include "util.h"
+
+#include "glm/glm.hpp"
+
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
+
 using namespace std;
 
-#include "util.h"
-#include "math/vec.hpp"
 
 int main() {
     // Initialize OpenGL, GLFW, GLEW, and create a window.
@@ -21,9 +26,19 @@ int main() {
     WRAP_GL( glUseProgram(program_id) );
 
     struct Vertex {
-        vec2 position;
-        vec3 color;
+        glm::vec2 position;
+        glm::vec3 color;
     };
+
+    // Image loading test (for textures)
+    int im_width = 0, im_height = 0, im_n = 0;
+    unsigned char *image = stbi_load("./src/test-image.png", &im_width,
+        &im_height, &im_n, 0);
+    printf("x=%d, y=%d, n=%d\n", im_width, im_height, im_n);
+
+    stbi_image_free(image);
+    
+    
 
     // Vertex and index data.
     Vertex verts[] = {
@@ -69,16 +84,14 @@ int main() {
     WRAP_GL( glVertexAttribPointer(loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
         POINTER_OFFSET(Vertex, color)) );
 
-    loc = glGetUniformLocation(program_id, "uTime");
+    WRAP_GL( loc = glGetUniformLocation(program_id, "uTime") );
 
     // Bind the index buffer and load index data.
     WRAP_GL( glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibos[0]) );
     WRAP_GL( glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices,
         GL_STATIC_DRAW) );
 
-    float t = 0;
-
-    float dt = 0;
+    float t = 0, dt = 0;
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -95,7 +108,7 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        t += dt += (rand()%100 - 50)/10000.;
+        t += dt += (rand()%10 - 5)/10000.;
     }
 
     glfwTerminate();
