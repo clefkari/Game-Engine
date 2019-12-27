@@ -97,6 +97,7 @@ int main() {
         GL_STATIC_DRAW) );
 
     float t = 0, dt = 0;
+    WRAP_GL( glEnable(GL_DEPTH_TEST) );
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -105,22 +106,19 @@ int main() {
         WRAP_GL( glUniform1f(glGetUniformLocation(program_id, "uTime"), 0) );
 
         // Clear the screen.
-        WRAP_GL( glClear(GL_COLOR_BUFFER_BIT) );
+        WRAP_GL( glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT) );
 
-        float theta = 0, sc = .75;
+        float theta = 0, sc = .5;
 
-        glm::vec3 trans = {-.5, -.5, -.5};
+        glm::vec3 trans = {0, 0, 0};
 
-        glm::mat4 mvp_mat(1);
+        glm::mat4 mvp_mat = glm::mat4(1);
 
-        mvp_mat = glm::scale(mvp_mat, glm::vec3(sc, sc, sc));
+        mvp_mat = glm::rotate(mvp_mat, t, glm::vec3(0, .707, .707));
+        mvp_mat = glm::rotate(mvp_mat, t/5, glm::vec3(0, 1, 0));
+        mvp_mat = glm::scale(mvp_mat, glm::vec3(.5, .5, .5));
+        mvp_mat = glm::translate(mvp_mat, {-.5, -.5, 0});
 
-        mvp_mat = glm::rotate(mvp_mat, t/10, glm::vec3(1, 0, 0));
-        mvp_mat = glm::rotate(mvp_mat, t/20, glm::vec3(0, 1, 0));
-        mvp_mat = glm::rotate(mvp_mat, t, glm::vec3(0, 0, 1));
-        mvp_mat = glm::translate(mvp_mat, trans);
-
-        //mvp_mat = glm::mat4(1);
 
         WRAP_GL( loc = glGetUniformLocation(program_id, "uModelViewProjection") );
         WRAP_GL( glUniformMatrix4fv(loc, 1, GL_FALSE, (const GLfloat *) &mvp_mat) );
@@ -128,8 +126,6 @@ int main() {
 
         // Draw a triangle strip according to the index buffer (the list of
         // vertex indices).
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(5);
         WRAP_GL( glDrawElements(GL_TRIANGLE_STRIP, 14, GL_UNSIGNED_INT, 0) );
 
         glfwSwapBuffers(window);
