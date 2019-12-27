@@ -17,6 +17,8 @@
 
 using namespace std;
 
+// Used for error handling. Checks the state of glGetError after every call
+// to opengl.
 #define WRAP_GL(stmt) stmt; \
 poll_errors(#stmt, __FILE__, __LINE__);
 
