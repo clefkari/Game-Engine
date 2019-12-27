@@ -15,7 +15,7 @@ struct vec {
             elements[i] = 0;
     }
 
-    vec(const T &els[N]) {
+    vec(const T (&els)[N]) {
         for (int i = 0; i < N; i++)
             elements[i] = els[i];
     }
